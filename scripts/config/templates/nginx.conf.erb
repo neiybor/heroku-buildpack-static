@@ -77,8 +77,6 @@ http {
       return 301 https://$host$request_uri;
     }
   <% end %>
-<<<<<<< Updated upstream
-=======
   
   location ~ ^/static/ {
     try_files $uri @s3;
@@ -91,7 +89,6 @@ http {
   location @s3 {
     proxy_pass https://s3.amazonaws.com/neighbor-build-${environment}/frontend$uri;
   }
->>>>>>> Stashed changes
 
   <% routes.each do |route, path| %>
     location ~ ^<%= route %>$ {
