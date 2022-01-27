@@ -49,6 +49,7 @@ http {
 
   server {
     listen <%= port %> default_server;
+    <%# listen 8080; %>
     server_name _;
 
     return 301 https://<%= redirect_target %>$request_uri;
@@ -154,7 +155,7 @@ http {
   # Redirect our listings pages to the new url structure
   location ~ "(*UTF8)^\/listings\/[A-z0-9\-]*\/[A-z0-9\-]*\/[0-9]*$" {
     mruby_set $listing_path /app/bin/config/lib/ngx_mruby/listing_redirect_path.rb cache;
-    return 301 https://$host/$listing_path$is_args$args;
+    proxy_pass http://172.17.0.1:8080/$host/$listing_path$is_args$args;
   }
 
   # Redirect our discover pages to the new url structure
