@@ -22,7 +22,7 @@ http {
 
   server_tokens off;
 
-  split_clients "${request_uri}_DLP_VERSION" $is_dlp_v2 { 
+  split_clients "${remote_addr}_DLP_VERSION" $is_dlp_v2 { 
   <%= dlp_v2_hide_percentage %>%   false;
     *                             true;
   }
@@ -218,17 +218,29 @@ http {
     # 1. There is not a neighbor rendertron header
     # 2. The $request_uri has some kind of /:city--:state-:suffix (no numbers) match
     set $static_render_condition "${http_x_neighbor_rendertron}---${uri}";
+    set $dlp_ab_test_condition "${http_x_neighbor_rendertron}---${is_dlp_v2}---${uri}";
     proxy_intercept_errors on;
 
     # this proxies the request to the prerendered dlp bucket folder if it is not a rendertron request and the URL is DLP-like
-    if ($static_render_condition ~ ^---\/[A-Z][a-zA-Z\-]*--[A-Z][a-zA-Z\-\/]*$) {
+    if ($dlp_ab_test_condition ~ ^---false---\/[A-Z][a-zA-Z\-]*--[A-Z][a-zA-Z\-\/]*$) {
+      proxy_pass https://s3.amazonaws.com/neighbor-build-${environment}/prerendered$request_uri;
+      break;
+    }
+
+    if ($dlp_ab_test_condition ~ ^---true---\/[A-Z][a-zA-Z\-]*--[A-Z][a-zA-Z\-\/]*$) {
+      proxy_pass https://s3.amazonaws.com/neighbor-build-${environment}/prerendered$request_uri/v2;
+      break;
+    }
+
+    # this proxies the request to the v1 prerendered dlp bucket folder if it is not a rendertron request and the URL is DLP-like
+    if ($dlp_ab_test_condition ~ "(*UTF8)^---false---\/locations\/[A-z\-\p{L}'%\/]*$") {
       proxy_pass https://s3.amazonaws.com/neighbor-build-${environment}/prerendered$request_uri;
       break;
     }
 
     # this proxies the request to the v2 prerendered dlp bucket folder if it is not a rendertron request and the URL is DLP-like
-    if ($static_render_condition ~ "(*UTF8)^---\/locations\/[A-z\-\p{L}'%\/]*$") {
-      proxy_pass https://s3.amazonaws.com/neighbor-build-${environment}/prerendered$request_uri;
+    if ($dlp_ab_test_condition ~ "(*UTF8)^---true---\/locations\/[A-z\-\p{L}'%\/]*$") {
+      proxy_pass https://s3.amazonaws.com/neighbor-build-${environment}/prerendered$request_uri/v2;
       break;
     }
 
@@ -242,16 +254,6 @@ http {
     if ($http_x_should_prerender) {
       proxy_pass $rendertron_base$neighbor_url;
       break;
-    }
-    
-    # if it is a rendertron request, on the dlp v2 arm, and has a DLP-like URL, then redirect rendertron with query param
-    set $dlp_v2_test_condition "${args}---${http_x_neighbor_rendertron}---${is_dlp_v2}---${request_uri}";
-    if ($dlp_v2_test_condition ~ ^---v[0-9]*---true---\/[A-Z][a-zA-Z\-]*--[A-Z][a-zA-Z\-\/]*$) {
-      return 302 "${request_uri}?v=2";
-    }
-
-    if ($dlp_v2_test_condition ~ "(*UTF8)^---v[0-9]*---true---\/locations\/[A-z\-\p{L}'%\/]*$") {
-      return 302 "${request_uri}?v=2";
     }
 
   <% if clean_urls %>
