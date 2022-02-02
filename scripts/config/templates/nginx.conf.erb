@@ -22,7 +22,7 @@ http {
 
   server_tokens off;
 
-  split_clients "${remote_addr}_DLP_VERSION" $is_dlp_v2 { 
+  split_clients "${http_x_forwarded_for}_DLP_VERSION" $is_dlp_v2 { 
   <%= dlp_v2_hide_percentage %>%   false;
     *                             true;
   }
