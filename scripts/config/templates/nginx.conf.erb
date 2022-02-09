@@ -105,7 +105,7 @@ http {
 
   rewrite ^/embed/(.*)$ /$1.html last;
 
-  location ~ ^/(((?!storage-blog).)*)/$ { 
+  location ~ ^/(((?!test-blog).)*)/$ { 
     return 301 $scheme://$http_host/$1;
   }
 
@@ -271,16 +271,12 @@ http {
   <% proxies.each do |location, hash| %>
     set $<%= hash['name'] %> <%= hash['host'] %>;
     location @<%= location %> {
-      rewrite ^<%= location %>/?(.*)$ <%= hash['path'] %>/$1 break;
-      # can reuse variable set above
       proxy_pass $<%= hash['name'] %>;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_ssl_name staging-newstorageblog.kinsta.cloud;
       proxy_ssl_server_name on;
-      <% hash['hide_headers'].each do |header_name|%>
-      proxy_hide_header <%= header_name %>;
-      <% end %>
-      <% %w(http https).each do |scheme| %>
-      proxy_redirect <%= hash["redirect_#{scheme}"] %> <%= location %>;
-      <% end %>
     }
   <% end %>
 
@@ -294,6 +290,5 @@ http {
     location = "/rentals/search/New York City, NY, USA" {
       return 301 https://www.neighbor.com/New-York--New-York-self-storage;
     }
-
   }
 }
