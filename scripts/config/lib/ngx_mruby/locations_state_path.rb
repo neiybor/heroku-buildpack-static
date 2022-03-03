@@ -71,8 +71,8 @@ end
 
 if uri.include?("indoor") || uri.include?("outdoor") || uri.include?("covered")
     state, city, type, subtype = uri.match(%r{/locations/([A-z0-9\-\p{L}'%]*)\/([A-z0-9\-\p{L}'%]*)\/([A-z0-9\-\p{L}'%]*)\/([A-z0-9\-\p{L}'%]*)$}mi).captures
-    "#{updated_state(state)}/#{city}/#{type.downcase}/#{subtype}"
+    "#{updated_state(state.downcase)}/#{city.downcase}/#{type.downcase}/#{subtype.downcase}"
 else
     state, city, type = uri.match(%r{/locations/([A-z0-9\-\p{L}'%]*)\/([A-z0-9\-\p{L}'%]*)\/([A-z0-9\-\p{L}'%]*)$}mi).captures
-    "#{updated_state(state)}/#{city}/#{type.downcase}"
+    "#{updated_state(state.downcase)}/#{city.downcase}/#{type.downcase}"
 end
