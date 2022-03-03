@@ -62,7 +62,11 @@ def updated_state(abbr_state)
         "wi" => "wisconsin",
         "wy" => "wyoming",
     }
-    state_map[abbr_state]
+    if state_map.key?(abbr_state)
+        return state_map[abbr_state]
+    else
+        return abbr_state
+    end
 end
 
 if uri.include?("indoor") || uri.include?("outdoor") || uri.include?("covered")
