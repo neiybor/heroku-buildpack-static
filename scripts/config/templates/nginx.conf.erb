@@ -22,11 +22,6 @@ http {
 
   server_tokens off;
 
-  split_clients "${request_uri}_DLP_VERSION" $is_dlp_v2 {
-  <%= dlp_v2_hide_percentage %>%   false;
-    *                             true;
-  }
-
 <% if logging['access'] %>
   access_log logs/access.log custom_agent;
 <% else %>
@@ -246,8 +241,8 @@ http {
   }
 
   # The /build directory is also needed because that's where the server-rendered JS comes from
-  # Redirect location DLPs to server-side rendered frontend
-  location ~ ^/(([0-9A-z\-]*)-near-me\/((indoor|outdoor|covered)\/)?((?!(indoor|outdoor|covered))[A-z\-]+)\/([A-z\-]+)$) {
+  # Proxy location DLPs to server-side rendered frontend
+  location ~ ^/(([0-9A-z\-]*)-near-me\/((indoor|outdoor|covered)\/)?((?!(indoor|outdoor|covered))[A-z\-]+)\/([A-zÀ-ÖØ-öø-ÿ\-\']+)$) {
     proxy_pass <%= ssr_frontend_host %>/$1$is_args$args;
   }
 
@@ -310,16 +305,6 @@ http {
     if ($http_x_should_prerender) {
       proxy_pass https://s3.amazonaws.com/neighbor-build-${environment}/prerendered$request_uri;
       break;
-    }
-
-    # if it is a rendertron request, on the dlp v2 arm, and has a DLP-like URL, then redirect rendertron with query param
-    set $dlp_v2_test_condition "${args}---${http_x_neighbor_rendertron}---${is_dlp_v2}---${request_uri}";
-    if ($dlp_v2_test_condition ~ ^---v[0-9]*---true---\/[A-Z][a-zA-Z\-]*--[A-Z][a-zA-Z\-\/]*$) {
-      return 302 "${request_uri}?v=2";
-    }
-
-    if ($dlp_v2_test_condition ~ "(*UTF8)^---v[0-9]*---true---\/locations\/[A-z\-\p{L}'%\/]*$") {
-      return 302 "${request_uri}?v=2";
     }
 
   <% if clean_urls %>

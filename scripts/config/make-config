@@ -8,6 +8,9 @@ TEMPLATE     = File.join(File.dirname(__FILE__), 'templates/nginx.conf.erb')
 USER_CONFIG  = 'static.json'.freeze
 NGINX_CONFIG = 'config/nginx.conf'.freeze
 
-erb = ERB.new(File.read(TEMPLATE)).result(NginxConfig.new(USER_CONFIG).context)
+stream = File.read(TEMPLATE).force_encoding('UTF-8')
+file = ERB.new(stream)
+config = NginxConfig.new(USER_CONFIG).context
+erb = file.result(config)
 
 File.write(NGINX_CONFIG, erb)
