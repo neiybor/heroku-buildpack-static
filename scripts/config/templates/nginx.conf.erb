@@ -30,7 +30,7 @@ http {
     50% <%= heroku_ssr_frontend_host %>;
     *  <%= aws_ssr_frontend_host %>;
   }
-  <% puts "TESTING", heroku_ssr_frontend_host, aws_ssr_frontend_host %>
+
 <% if logging['access'] %>
   access_log logs/access.log custom_agent;
 <% else %>
