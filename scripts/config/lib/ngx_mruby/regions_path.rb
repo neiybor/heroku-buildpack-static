@@ -14,12 +14,12 @@ types = storage_type.split('-')
 if types.length > 1
   if %w[indoor outdoor covered].include? types[0]
     "#{types[1]}#{suffix}-near-me/#{types[0]}/#{state.downcase}"
+  elsif state == 'search'
+    "#{types[0]}#{suffix}/search"
   else
     # case climate-controlled storage, long term storage, long term parking
     "#{storage_type}#{suffix}-near-me/#{state.downcase}"
   end
-elsif state == 'search'
-  "#{types[0]}#{suffix}/search"
 else
   "#{types[0]}#{suffix}-near-me/#{state.downcase}"
 end
