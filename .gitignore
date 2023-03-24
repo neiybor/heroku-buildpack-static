@@ -3,3 +3,5 @@ vendor/
 .bundle/
 test.conf
 static.json
+.idea/
+*.DS_STORE
