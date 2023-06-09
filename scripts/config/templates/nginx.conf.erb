@@ -311,7 +311,7 @@ http {
 
   # redirect all commercial, facility, location, and storage pages to ssr-frontend
   location ~ ^/(commercial|facility|location|storage)\/(.*) {
-    proxy_pass <%= ssr_frontend_host %>/commercial/$1$is_args$args;
+    proxy_pass <%= ssr_frontend_host %>/$1/$2$is_args$args;
   }
 
   location @proxy_fallback {
