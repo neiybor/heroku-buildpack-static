@@ -289,8 +289,8 @@ http {
     proxy_pass <%= ssr_frontend_host %>/$1$is_args$args;
   }
 
-  # redirect discover pages with abbreviated state or upper-cased letters to full, lower-cased state name
-  location ~ ^/(([0-9A-z\-]*)-near-me\/((indoor|outdoor|covered)\/)?((?!(indoor|outdoor|covered))[A-z]{2}|.*[A-Z +].*|.*%20.*)(\/[A-z\-]*)*$) {
+  # redirect discover pages with abbreviated state name to full state name
+  location ~ ^/(([0-9A-z\-]*)-near-me\/((indoor|outdoor|covered)\/)?((?!(indoor|outdoor|covered))[A-z][A-z])(\/[A-z\-]*)*$) {
     mruby_set $discover_path /app/bin/config/lib/ngx_mruby/discover_state_path.rb cache;
     return 301 https://$host/$discover_path$is_args$args;
   }
@@ -299,6 +299,12 @@ http {
   location = "/warehouse-storage-near-me" {
     return 301 https://www.neighbor.com/commercial/warehouse-storage;
   }
+
+	# redirect any near me pages with invalid characters to the corrected url
+	location ~ /((?!storage-units)[0-9A-z-]+-near-me\/(.*[A-Z\+ ].*+|.*%20.*)*$) {
+		mruby_set $discover_path /app/bin/config/lib/ngx_mruby/discover_state_path.rb cache;
+		return 301 https://$host/$discover_path$is_args$args;
+	}
 
   # redirect all near-me pages to SSR frontend
   location ~ /((?!storage-units)[0-9A-z-]+-near-me(\/[A-z-]*)*$) {
