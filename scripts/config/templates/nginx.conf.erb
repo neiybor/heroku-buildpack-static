@@ -351,6 +351,12 @@ http {
     return 301 https://$host/business/$1$is_args$args;
   }
 
+  # redirect any listing detail page with invalid characters to the corrected url
+  location ~ ^/storage-units-near-me\/(.*[A-Z\+\ ].*$) {
+    mruby_set $listing_path /app/bin/config/lib/ngx_mruby/listing_downcase_path.rb cache;
+    return 301 https://$host/storage-units-near-me/$listing_path$is_args$args;
+  }
+
   location @proxy_fallback {
     mruby_set $path /app/bin/config/lib/ngx_mruby/routes_path.rb cache;
     mruby_set $fallback /app/bin/config/lib/ngx_mruby/routes_fallback.rb cache;
