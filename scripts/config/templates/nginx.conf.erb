@@ -44,6 +44,12 @@ http {
     "<%= ssr_frontend_host %>" "<%= ssr_frontend_host %>";
     "https://<%= redirect_target %>"  "https://<%= redirect_target %>";
   }
+  
+  map $cookie_speedy_search_assignment $speedy_search_redirect {
+    default                                   $speedy_search_assignment;
+    "<%= ssr_frontend_host %>/search/" "<%= ssr_frontend_host %>/search/";
+    "https://<%= redirect_target %>/search/"  "https://<%= redirect_target %>/search/";
+  }
 
 <% if logging['access'] %>
   access_log logs/access.log custom_agent;
@@ -394,6 +400,11 @@ http {
   # redirect /host page to ssr-frontend
   location = "/host" {
     proxy_pass <%= ssr_frontend_host %>/host$is_args$args;
+  }
+
+   # redirect /business page to ssr-frontend
+  location = "/business" {
+    proxy_pass <%= ssr_frontend_host %>/business$is_args$args;
   }
 
   # redirect deprecated commercial pages to new business directory
