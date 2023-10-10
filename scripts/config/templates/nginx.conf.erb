@@ -128,8 +128,8 @@ http {
 
   rewrite ^/embed/(.*)$ /$1.html last;
 
-  # Speedy Search - SSR
-  if ($speedy_search_condition ~ "on_<%= ssr_frontend_host %>_/search") {
+  # 1. Speedy Search - SSR
+  if ($speedy_search_condition = "on_<%= ssr_frontend_host %>_/search") {
     rewrite ^(.*)$ /speedy-search/$1;
   }
 
@@ -141,7 +141,12 @@ http {
     proxy_pass $speedy_search_redirect;
   }
 
-  # Speedy Search - React
+  # redirect /speedy-search/count and /speedy-search/{listingId} to ssr-frontend
+  location ~ ^/search/(count|\d+)$ {
+    proxy_pass <%= ssr_frontend_host %>/search/$1$is_args$args;
+  }
+
+  # 2. Speedy Search - React
   if ($speedy_search_condition ~ "on_https://<%= redirect_target %>_/search") {
     rewrite ^(.*)$ /snail-search/$1;
   }
