@@ -33,7 +33,7 @@ http {
     * 2;
   }
 
-  split_clients "${request_id}_SPEEDY_SEARCH_FF" $speedy_search_ff {
+  split_clients "${remote_addr}_SPEEDY_SEARCH_FF" $speedy_search_ff {
     <%= speedy_search_ff_percent_off || 100 %>%  "off";
     *                                     "on";
   }
