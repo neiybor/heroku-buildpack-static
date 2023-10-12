@@ -43,7 +43,7 @@ http {
     *     https://<%= redirect_target %>;
   }
   
-  map $cookie_speedy_url $speedy_search_redirect {
+  map $cookie_speedy_search_assignment $speedy_search_redirect {
     default                                   $speedy_url;
     "<%= ssr_frontend_host %>"                "<%= ssr_frontend_host %>";
     "https://<%= redirect_target %>"          "https://<%= redirect_target %>";
@@ -138,7 +138,7 @@ http {
 
   rewrite ^/embed/(.*)$ /$1.html last;
 
-  # the speedy_url cookie forces nginx to always send that user to that arm of the test
+  # the speedy_search_assignment cookie forces nginx to always send that user to that arm of the test
   # the speedy_should_identify cookie tells the clients to identify the assignment in Rudderstack
   # 1. Speedy Search - SSR
   if ($speedy_search_condition = "on_<%= ssr_frontend_host %>_/search") {
@@ -147,7 +147,7 @@ http {
 
   location ^~ /speedy-search {
     rewrite ^/speedy-search/(.*)$ $1 break;
-    add_header Set-Cookie "speedy_url=<%= ssr_frontend_host %>; Max-Age=31536000; Path=/";
+    add_header Set-Cookie "speedy_search_assignment=<%= ssr_frontend_host %>; Max-Age=31536000; Path=/";
     add_header Set-Cookie "speedy_should_identify=$speedy_should_identify_default_true; Max-Age=31536000; Path=/";
     add_header x-speedy-redir <%= ssr_frontend_host %>;
 
@@ -156,7 +156,7 @@ http {
 
   # redirect /search-q, /speedy-search/count, and /speedy-search/{listingId} to ssr-frontend
   location ~ ^/search((-q)|/?(count|\d+))$ {
-    add_header Set-Cookie "speedy_url=<%= ssr_frontend_host %>; Max-Age=31536000; Path=/";
+    add_header Set-Cookie "speedy_search_assignment=<%= ssr_frontend_host %>; Max-Age=31536000; Path=/";
     add_header Set-Cookie "speedy_should_identify=$speedy_should_identify_default_false; Max-Age=31536000; Path=/";
     add_header x-speedy-redir "<%= ssr_frontend_host %>";
 
@@ -171,7 +171,7 @@ http {
   location ^~ /snail-search {
     rewrite ^/snail-search/(.*)$ $1 break;
     mruby_set $fallback /app/bin/config/lib/ngx_mruby/routes_fallback.rb cache;
-    add_header Set-Cookie "speedy_url=https://<%= redirect_target %>; Max-Age=31536000; Path=/";
+    add_header Set-Cookie "speedy_search_assignment=https://<%= redirect_target %>; Max-Age=31536000; Path=/";
     add_header Set-Cookie "speedy_should_identify=$speedy_should_identify_default_true; Max-Age=31536000; Path=/";
     add_header x-speedy-redir "https://<%= redirect_target %>";
 
@@ -181,7 +181,7 @@ http {
   # send /search-q/storing to React
   location ~ ^/search-q/storing {
     mruby_set $fallback /app/bin/config/lib/ngx_mruby/routes_fallback.rb cache;
-    add_header Set-Cookie "speedy_url=https://<%= redirect_target %>; Max-Age=31536000; Path=/";
+    add_header Set-Cookie "speedy_search_assignment=https://<%= redirect_target %>; Max-Age=31536000; Path=/";
     add_header Set-Cookie "speedy_should_identify=$speedy_should_identify_default_false; Max-Age=31536000; Path=/";
     add_header x-speedy-redir "https://<%= redirect_target %>";
 
@@ -196,7 +196,7 @@ http {
   location ^~ /speedy-off {
     rewrite ^/speedy-off/(.*)$ $1 break;
     mruby_set $fallback /app/bin/config/lib/ngx_mruby/routes_fallback.rb cache;
-    add_header Set-Cookie "speedy_url=https://<%= redirect_target %>; Max-Age=31536000; Path=/";
+    add_header Set-Cookie "speedy_search_assignment=https://<%= redirect_target %>; Max-Age=31536000; Path=/";
     add_header Set-Cookie "speedy_should_identify=false; Max-Age=31536000; Path=/";
     add_header x-speedy-redir "https://<%= redirect_target %>";
 
