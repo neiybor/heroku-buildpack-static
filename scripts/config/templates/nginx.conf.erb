@@ -469,7 +469,7 @@ http {
   }
 
   # redirect to speedy home page in ssr-frontend
-  location = "/" {
+  location = "" {
     proxy_pass <%= ssr_frontend_host %>/homepage$is_args$args;
   }
 
