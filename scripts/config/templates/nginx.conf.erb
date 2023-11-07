@@ -144,6 +144,11 @@ http {
   if ($speedy_search_condition = "on_<%= ssr_frontend_host %>_/search") {
     rewrite ^(.*)$ /speedy-search/$1;
   }
+  
+  # redirect to speedy home page in ssr-frontend
+  location = / {
+    proxy_pass <%= ssr_frontend_host %>/$is_args$args;
+  }
 
   location ^~ /speedy-search {
     rewrite ^/speedy-search/(.*)$ $1 break;
@@ -466,11 +471,6 @@ http {
    # redirect /business page to ssr-frontend
   location = "/business" {
     proxy_pass <%= ssr_frontend_host %>/business$is_args$args;
-  }
-
-  # redirect to speedy home page in ssr-frontend
-  location = "" {
-    proxy_pass <%= ssr_frontend_host %>/homepage$is_args$args;
   }
 
   # redirect deprecated commercial pages to new business directory
