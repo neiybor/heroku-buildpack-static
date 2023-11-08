@@ -208,6 +208,16 @@ http {
     try_files "/index.html" $fallback;
   }
 
+  # redirect {userId}/user-data to ssr-frontend
+  location ~ ^/(\d+)/user-data$ {
+    proxy_pass <%= ssr_frontend_host %>/$1/user-data$is_args$args;
+  }
+
+  # redirect ssr-features to ssr-frontend
+  location ~ ^/ssr-features$ {
+    proxy_pass <%= ssr_frontend_host %>/ssr-features$is_args$args;
+  }
+
   location = "/parking" {
     if ($parking_split_redirect = 1) {
       rewrite ^ /host-signup?utm_source=DirectMail&utm_campaign=lot-owners-direct-link permanent;
