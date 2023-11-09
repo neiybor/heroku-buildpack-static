@@ -214,7 +214,7 @@ http {
   }
 
   # redirect ssr-features to ssr-frontend
-  location ~ ^/ssr-features$ {
+  location = "/ssr-features" {
     proxy_pass <%= ssr_frontend_host %>/ssr-features$is_args$args;
   }
 
