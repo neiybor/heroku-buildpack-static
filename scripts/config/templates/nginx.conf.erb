@@ -115,6 +115,11 @@ http {
     proxy_pass <%= ssr_frontend_host %>;
   }
 
+  # redirect /ssr-features page to ssr-frontend
+  location = "/ssr-features" {
+    proxy_pass <%= ssr_frontend_host %>/ssr-features$is_args$args;
+  }
+
   location = "/parking" {
     if ($parking_split_redirect = 1) {
       rewrite ^ /host-signup?utm_source=DirectMail&utm_campaign=lot-owners-direct-link permanent;
