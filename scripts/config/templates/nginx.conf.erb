@@ -111,6 +111,10 @@ http {
 
   rewrite ^/embed/(.*)$ /$1.html last;
 
+  location = "/search-q/storing" {
+    return 301 https://www.neighbor.com/search-q;
+  }
+
   location ^~ /search {
     proxy_pass <%= ssr_frontend_host %>;
   }
