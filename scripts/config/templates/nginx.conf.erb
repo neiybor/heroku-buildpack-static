@@ -112,7 +112,7 @@ http {
   rewrite ^/embed/(.*)$ /$1.html last;
 
   location = "/search-q/storing" {
-    return 301 https://www.neighbor.com/search-q;
+    return 301 https://$host/search-q;
   }
 
   location ^~ /search {
