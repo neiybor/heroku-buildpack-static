@@ -119,17 +119,7 @@ http {
     proxy_pass <%= ssr_frontend_host %>;
   }
 
-  # redirect to speedy home page in ssr-frontend
-  location = / {
-    proxy_pass <%= ssr_frontend_host %>/$is_args$args;
-  }
-
-  # redirect {userId}/user-data to ssr-frontend
-  location ~ ^/(\d+)/user-data$ {
-    proxy_pass <%= ssr_frontend_host %>/$1/user-data$is_args$args;
-  }
-
-  # redirect ssr-features to ssr-frontend
+  # redirect /ssr-features page to ssr-frontend
   location = "/ssr-features" {
     proxy_pass <%= ssr_frontend_host %>/ssr-features$is_args$args;
   }
