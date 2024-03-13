@@ -125,7 +125,7 @@ http {
   }
 
   # redirect all ssr fetch endpoints to ssr
-  location ~ /ssr-resources/(.*) {
+  location ~ ^/ssr-resources/(.*) {
     proxy_pass <%= ssr_frontend_host %>/ssr-resources/$1$is_args$args;
   }
 
