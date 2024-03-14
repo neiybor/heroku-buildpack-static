@@ -410,7 +410,8 @@ http {
 	# nginx does not support direction location redirects for query params so we have to use a nested directive
   location = "/storage/earnings-calculator" {
     if ($args ~* "utm_source=DirectMail&utm_campaign=postcard_acre_dec2023") {
-      rewrite ^ /storage/earnings-calculator?utm_source=DirectMail&utm_campaign=postcard_acre_mar2024 permanent;
+      set $args "utm_source=DirectMail&utm_campaign=postcard_acre_mar2024";
+      return 301 https://$host/storage/earnings-calculator$is_args$args;
     }
   }
 
