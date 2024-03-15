@@ -413,6 +413,7 @@ http {
       set $args "utm_source=DirectMail&utm_campaign=postcard_acre_mar2024";
       return 301 https://$host/storage/earnings-calculator$is_args$args;
     }
+    proxy_pass <%= ssr_frontend_host %>/storage/earnings-calculator$is_args$args;
   }
 
   location @proxy_fallback {
