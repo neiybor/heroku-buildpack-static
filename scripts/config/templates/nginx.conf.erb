@@ -405,6 +405,17 @@ http {
     return 301 https://$host/storage-units-near-me/$listing_path$is_args$args;
   }
 
+	# A QR code was created for the exact url:
+	# /storage/earnings-calculator?utm_source=DirectMail&utm_campaign=postcard_acre_dec2023
+	# nginx does not support direction location redirects for query params so we have to use a nested directive
+  location = "/storage/earnings-calculator" {
+    if ($args ~* "utm_source=DirectMail&utm_campaign=postcard_acre_dec2023") {
+      set $args "utm_source=DirectMail&utm_campaign=postcard_acre_mar2024";
+      return 301 https://$host/storage/earnings-calculator$is_args$args;
+    }
+    proxy_pass <%= ssr_frontend_host %>/storage/earnings-calculator$is_args$args;
+  }
+
   location @proxy_fallback {
     mruby_set $path /app/bin/config/lib/ngx_mruby/routes_path.rb cache;
     mruby_set $fallback /app/bin/config/lib/ngx_mruby/routes_fallback.rb cache;
