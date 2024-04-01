@@ -111,6 +111,11 @@ http {
 
   rewrite ^/embed/(.*)$ /$1.html last;
 
+  # redirect to speedy home page in ssr-frontend
+  location = / {
+    proxy_pass <%= ssr_frontend_host %>/$is_args$args;
+  }
+
   location = "/search-q/storing" {
     return 301 https://$host/search-q;
   }
@@ -197,7 +202,7 @@ http {
     proxy_set_header X-Real-IP          $remote_addr;
     proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto  $scheme;
-    proxy_hide_header X-Robots-Tag;  
+    proxy_hide_header X-Robots-Tag;
   }
 
   # Redirect dlp urls with uppercase cities or states to lowercase or urls with spaces or %20 symbols to proper location
