@@ -113,12 +113,6 @@ http {
 
   # redirect to speedy home page in ssr-frontend
   location = / {
-    # email and password reset links should have a trailing auth param to go to react not ssr
-    # if location = / and has query param auth_display then add param /auth
-    if ($args ~* "auth_display") {
-      return 301 https://$host/auth$is_args$args;
-    }
-
     proxy_pass <%= ssr_frontend_host %>/$is_args$args;
   }
 
