@@ -113,12 +113,6 @@ http {
 
   # redirect to speedy home page in ssr-frontend
   location = / {
-    # email and password reset links should have a trailing auth param to go to react not ssr
-    # if location = / and has query param auth_display then add param /auth
-    if ($args ~* "auth_display") {
-      return 301 https://$host/auth$is_args$args;
-    }
-
     proxy_pass <%= ssr_frontend_host %>/$is_args$args;
   }
 
@@ -325,8 +319,28 @@ http {
     return 301 https://$host/truck-parking-near-me$1$is_args$args;
   }
 
+  location ~ ^/(24-hour|climate-controlled)-storage-near-me(.*) {
+    return 301 https://$host/self-storage-near-me$2$is_args$args;
+  }
+
+  location ~ ^/parking-spaces-near-me(.*) {
+    return 301 https://$host/monthly-parking-near-me$1$is_args$args;
+  }
+
+  location ~ ^/boat-storage-near-me/(indoor|outdoor|covered)(.*) {
+    return 301 https://$host/boat-storage-near-me$2$is_args$args;
+  }
+
+  location ~ ^/rv-storage-near-me/(indoor|covered)(.*) {
+    return 301 https://$host/rv-storage-near-me$2$is_args$args;
+  }
+
+  location ~ ^/car-storage-near-me/outdoor(.*) {
+    return 301 https://$host/car-storage-near-me$1$is_args$args;
+  }
+
   # Redirect covered car to indoor, deprecating covered car
-  location ~ ^/car-storage-near-me/covered/(.*) {
+  location ~ ^/car-storage-near-me/covered(.*) {
     return 301 https://$host/car-storage-near-me/indoor/$1$is_args$args;
   }
 
