@@ -138,7 +138,6 @@ http {
   # redirect all ssr fetch endpoints to ssr
   location ~ ^/ssr-resources/(.*) {
     proxy_pass <%= ssr_frontend_host %>/ssr-resources/$1$is_args$args;
-    proxy_http_version 1.1;
   }
 
   location = "/parking" {
