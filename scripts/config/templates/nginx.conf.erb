@@ -392,6 +392,11 @@ http {
     return 301 https://$host$corrected_path$is_args$args;
   }
 
+  # redirect all /sitemap/* pages to SSR frontend
+  location ~ ^/sitemap/(.*) {
+    proxy_pass <%= ssr_frontend_host %>/sitemap/$1$is_args$args;
+  }
+
   # redirect all near-me pages to SSR frontend
   location ~ /((?!storage-units)[0-9A-z-]+-near-me(\/.*)*$) {
     proxy_pass <%= ssr_frontend_host %>/$1$is_args$args;
