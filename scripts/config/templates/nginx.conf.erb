@@ -398,7 +398,7 @@ http {
   }
 
   # redirect all near-me pages to SSR frontend
-  location ~ /((?!storage-units)[0-9A-z-]+-near-me(\/.*)*$) {
+  location ~ /((?!storage-units)[0-9A-z-]+-near-me\/.*$) {
     proxy_pass <%= ssr_frontend_host %>/$1$is_args$args;
   }
 
