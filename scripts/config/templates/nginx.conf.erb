@@ -299,11 +299,6 @@ http {
     return 301 https://$host/$1/$2/$3$is_args$args;
   }
 
-  # Redirect fleet-storage-near-me and fleet-parking-near-me DLPs to SSR fleet parking landing page
-  location ~ ^/fleet-(storage|parking)-near-me(.*) {
-    return 301 https://$host/business/fleet-parking$is_args$args;
-  }
-
   # Redirect deprecated DLP subtypes to their main type
 
   # Current deprecated subtypes are all truck storage subtypes, which should redirect to their parent type
@@ -348,10 +343,6 @@ http {
   # Redirect covered car to indoor, deprecating covered car
   location ~ ^/car-storage-near-me/covered(.*) {
     return 301 https://$host/car-storage-near-me/indoor/$1$is_args$args;
-  }
-
-  location ~ ^/trailer-storage-near-me(.*) {
-    return 301 https://$host/rv-storage-near-me$1$is_args$args;
   }
 
   # redirect warehouse storage dlps to the new commercial warehouse storage cms page
