@@ -299,6 +299,11 @@ http {
     return 301 https://$host/$1/$2/$3$is_args$args;
   }
 
+  # Redirect fleet-storage-near-me and fleet-parking-near-me DLPs to SSR fleet parking landing page
+  location ~ ^/fleet-storage-near-me(.*) {
+    return 301 https://$host/business/fleet-parking$is_args$args;
+  }
+
   # Redirect deprecated DLP subtypes to their main type
 
   # Current deprecated subtypes are all truck storage subtypes, which should redirect to their parent type
