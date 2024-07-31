@@ -128,6 +128,10 @@ http {
 
   location ^~ /search {
     proxy_pass <%= ssr_frontend_host %>;
+
+    proxy_buffer_size 128k;
+    proxy_buffers 16 128k;
+    proxy_busy_buffers_size 256k;
   }
 
   # redirect /ssr-features page to ssr-frontend
