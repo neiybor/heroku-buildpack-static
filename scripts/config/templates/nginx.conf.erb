@@ -121,6 +121,11 @@ http {
 
     proxy_pass <%= ssr_frontend_host %>/$is_args$args;
   }
+      
+  # remove trailing ? from urls
+  location ~ \?$ {
+    rewrite ^(.*)\?$ $1 permanent;
+  }
 
   location = "/search-q/storing" {
     return 301 https://$host/search-q;
