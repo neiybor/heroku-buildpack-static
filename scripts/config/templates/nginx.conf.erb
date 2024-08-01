@@ -121,11 +121,6 @@ http {
 
     proxy_pass <%= ssr_frontend_host %>/$is_args$args;
   }
-  
-  # remove trailing ? from urls
-  location ~ \?$ {
-    rewrite ^(.*)\?$ $1 permanent;
-  }
 
   location = "/search-q/storing" {
     return 301 https://$host/search-q;
@@ -309,7 +304,7 @@ http {
   }
 
   # Redirect fleet-storage-near-me and fleet-parking-near-me DLPs to SSR fleet parking landing page
-  location ~ ^/fleet-storage-near-me(.*) {
+  location ~ ^/fleet-(storage|parking)-near-me(.*) {
     return 301 https://$host/business/fleet-parking$is_args$args;
   }
 
@@ -357,6 +352,10 @@ http {
   # Redirect covered car to indoor, deprecating covered car
   location ~ ^/car-storage-near-me/covered(.*) {
     return 301 https://$host/car-storage-near-me/indoor/$1$is_args$args;
+  }
+
+  location ~ ^/trailer-storage-near-me(.*) {
+    return 301 https://$host/rv-storage-near-me$1$is_args$args;
   }
 
   # redirect warehouse storage dlps to the new commercial warehouse storage cms page
