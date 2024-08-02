@@ -122,9 +122,11 @@ http {
     proxy_pass <%= ssr_frontend_host %>/$is_args$args;
   }
       
-  # remove trailing ? from urls
-  location ~ \?$ {
-    rewrite ^(.*)\?$ $1 permanent;
+  # remove trailing ? from dlp urls
+  location ~ (*UTF8)^\/[A-z0-9-]*-near-me.* {
+      if ($request_uri ~ ^(.*)\?$) {
+          return 301 $1;
+      }
   }
 
   location = "/search-q/storing" {
