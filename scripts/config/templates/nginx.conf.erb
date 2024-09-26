@@ -440,7 +440,7 @@ http {
   }
 
   # redirect /check-availability ghost listing pages to ssr-frontend
-  location = ^/check-availability/(.*) {
+  location ~ ^/check-availability/(.*) {
     proxy_pass <%= ssr_frontend_host %>/check-availability/$1$is_args$args;
   }
 
