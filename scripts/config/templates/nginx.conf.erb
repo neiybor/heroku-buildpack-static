@@ -121,7 +121,7 @@ http {
 
     proxy_pass <%= ssr_frontend_host %>/$is_args$args;
   }
-      
+
   location = "/search-q/storing" {
     return 301 https://$host/search-q;
   }
@@ -135,7 +135,7 @@ http {
     proxy_buffers 16 128k;
     proxy_busy_buffers_size 256k;
   }
-  
+
   location ^~ /search {
     proxy_pass <%= ssr_frontend_host %>;
 
@@ -434,9 +434,14 @@ http {
     proxy_pass <%= ssr_frontend_host %>/host$is_args$args;
   }
 
-   # redirect /business page to ssr-frontend
+  # redirect /business page to ssr-frontend
   location = "/business" {
     proxy_pass <%= ssr_frontend_host %>/business$is_args$args;
+  }
+
+  # redirect /check-availability ghost listing pages to ssr-frontend
+  location ~ ^/check-availability/(.*) {
+    proxy_pass <%= ssr_frontend_host %>/check-availability/$1$is_args$args;
   }
 
   # redirect deprecated commercial pages to new business directory
