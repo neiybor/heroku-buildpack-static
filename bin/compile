@@ -32,8 +32,8 @@ cat <<'EOF'
 EOF
 
 case "${STACK}" in
-  heroku-18|heroku-20)
-    nginx_archive_url="https://neiybor-public.s3-us-west-1.amazonaws.com/archives/${STACK}/nginx-1.19.0-ngx_mruby-2.2.3.tgz"
+  heroku-20)
+    nginx_archive_url="https://neiybor-public.s3-us-west-1.amazonaws.com/archives/${STACK}/nginx-1.25.2-ngx_mruby-2.6.0.tgz"
     ;;
   *)
     echo "Stack ${STACK} is not supported!"
