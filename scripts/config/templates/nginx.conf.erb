@@ -16,6 +16,9 @@ http {
   gzip_proxied any;
   map_hash_bucket_size 128;
 
+  # tag traffic that has come through nginx for validation. This is used in ssr-frontend to redirect invalid traffic back through nginx
+  proxy_set_header X-Via-Neighbor "true";
+
   log_format custom_agent  'network.client.ip=$remote_addr network.client.ip_forward_chain=$http_x_forwarded_for timestamp=$time_iso8601 log_source="nginx" '
                            'http.method=$request_method http.url="$request_uri" http.status_code=$status network.bytes_written=$body_bytes_sent http.request_id=$http_x_request_id '
                            'referrer="$http_referer" http.user_agent="$http_user_agent" http.downstream_user_agent="$http_x_original_user_agent" '
