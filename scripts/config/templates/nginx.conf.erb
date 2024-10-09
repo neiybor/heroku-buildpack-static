@@ -126,15 +126,9 @@ http {
     return 301 https://$host/search-q;
   }
 
-  # This will allow us to replicate cloudflare 502 errors we are seeing in search.
-  # Once the issue is resolved, this route should be removed from here and the ssr-frontend.
-  location = /cloudflare-error-playground {
-    proxy_pass <%= ssr_frontend_host %>/cloudflare-error-playground$is_args$args;
-
-    proxy_buffer_size 128k;
-    proxy_buffers 16 128k;
-    proxy_busy_buffers_size 256k;
-  }
+location ~ ^/listing/(.*)$ {
+    proxy_pass <%= ssr_frontend_host %>/listing/$1$is_args$args;
+}  
 
   location ^~ /search {
     proxy_pass <%= ssr_frontend_host %>;
