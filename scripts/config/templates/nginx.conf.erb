@@ -135,11 +135,15 @@ http {
   }
 
   location ~ ^/external-reservation/form/(.*)$ {
-      proxy_pass <%= ssr_frontend_host %>/external-reservation/form/$1$is_args$args;
+    proxy_pass <%= ssr_frontend_host %>/external-reservation/form/$1$is_args$args;
+
+    proxy_buffer_size 128k;
+    proxy_buffers 16 128k;
+    proxy_busy_buffers_size 256k;
   }
 
   location ~ ^/external-reservation/(.*)$ {
-      proxy_pass <%= ssr_frontend_host %>/external-reservation/$1$is_args$args;
+    proxy_pass <%= ssr_frontend_host %>/external-reservation/$1$is_args$args;
   }
 
   location ^~ /search {
