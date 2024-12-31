@@ -122,13 +122,17 @@ http {
     proxy_pass <%= ssr_frontend_host %>/$is_args$args;
   }
 
+  location = "/terms-of-service" {
+    proxy_pass <%= ssr_frontend_host %>/terms-of-service$is_args$args;
+  }
+
   location = "/search-q/storing" {
     return 301 https://$host/search-q;
   }
 
   location ~ ^/listing/(.*)$ {
       proxy_pass <%= ssr_frontend_host %>/listing/$1$is_args$args;
-  }  
+  }
 
   location ~ ^/location/(.*)$ {
       proxy_pass <%= ssr_frontend_host %>/location/$1$is_args$args;
