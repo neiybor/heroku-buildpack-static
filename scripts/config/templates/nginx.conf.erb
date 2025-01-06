@@ -134,8 +134,8 @@ http {
       proxy_pass <%= ssr_frontend_host %>/listing/$1$is_args$args;
   }
 
-  location ~ ^/location/(.*)$ {
-      proxy_pass <%= ssr_frontend_host %>/location/$1$is_args$args;
+  location ~ ^/loc/(.*)$ {
+      proxy_pass <%= ssr_frontend_host %>/loc/$1$is_args$args;
   }
 
   location ~ ^/external-reservation/form/(.*)$ {
