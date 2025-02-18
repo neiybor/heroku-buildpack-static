@@ -163,6 +163,11 @@ http {
     proxy_pass <%= ssr_frontend_host %>/ssr-features$is_args$args;
   }
 
+  # redirect /cacheable-ab-test page to ssr-frontend
+  location = "/cacheable-ab-test" {
+    proxy_pass <%= ssr_frontend_host %>/cacheable-ab-test$is_args$args;
+  }
+
   # redirect all ssr fetch endpoints to ssr
   location ~ ^/ssr-resources/(.*) {
     proxy_pass <%= ssr_frontend_host %>/ssr-resources/$1$is_args$args;
